@@ -1,0 +1,203 @@
+import { useRouter } from "next/dist/client/router";
+import { Button, Card, Image, Text, TextInput } from "@mantine/core";
+import { useState } from "react";
+
+const Meetup = (props) => {
+  const { description, imgURL, meetup, id } = props.movie;
+  const [meetupEdit, setMeetup] = useState("");
+  const [descriptionEdit, setDesc] = useState("");
+  const [imgURLEdit, setImgURL] = useState("");
+  const [isEdit, setIsEdit] = useState(false);
+  const router = useRouter();
+
+  const handleEdit = () => {
+    setIsEdit(true);
+  };
+
+  const handleChange = (e, currState) => {
+    currState(e.target.value);
+  };
+
+  const submitHandler = async () => {
+    try {
+      const res = await fetch("/api/handle-meetup", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ meetupEdit, descriptionEdit, imgURLEdit, id }),
+      });
+
+      console.log(await res.json());
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsEdit(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const res = await fetch(
+        `https://nextjs-meetup-tut-default-rtdb.asia-southeast1.firebasedatabase.app/meetups/${id}.json`,
+        {
+          method: "DELETE", // *GET, POST, PUT, DELETE, etc.
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(await res.json());
+    } catch (e) {
+      console.log(e);
+    } finally {
+      router.push("/");
+    }
+  };
+
+  return (
+    <div className="py-0">
+      {isEdit ? (
+        <div className="flex justify-center items-center">
+          <div className="w-1/2 pt-20">
+            <TextInput
+              value={meetupEdit}
+              onChange={(e) => handleChange(e, setMeetup)}
+              placeholder=""
+              label="Meetup"
+              required
+            />
+
+            <TextInput
+              onChange={(e) => handleChange(e, setDesc)}
+              placeholder=""
+              label="Description"
+              value={descriptionEdit}
+              required
+            />
+
+            <TextInput
+              onChange={(e) => handleChange(e, setImgURL)}
+              placeholder=""
+              value={imgURLEdit}
+              label="Image URL"
+              required
+            />
+            <Button
+              onClick={submitHandler}
+              variant="outline"
+              color="pink"
+              className="mt-20"
+            >
+              Submit
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div className="bg-pink-400 py-5">
+            <h1 className=" text-5xl ">Meetup Details</h1>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Card
+              shadow="sm"
+              p="lg"
+              component="a"
+              target="_blank"
+              style={{ width: "900px" }}
+            >
+              <Card.Section>
+                <Image src={imgURLEdit} alt="No way!" />
+              </Card.Section>
+
+              <Text
+                weight={500}
+                className="text-orange-800 text-6xl mb-5"
+                mt={20}
+              >
+                {meetupEdit}
+              </Text>
+
+              <Text style={{ fontSize: "34px" }}>{descriptionEdit}</Text>
+
+              <div className="flex justify-evenly mt-5">
+                <Button onClick={handleEdit} className="bg-blue-600" size="lg">
+                  Edit
+                </Button>
+                <Button onClick={handleDelete} className="bg-red-600" size="lg">
+                  Delete
+                </Button>
+              </div>
+            </Card>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// export async function getStaticProps() {
+//   return {
+//     props: {
+//       nice: "niyoh",
+//     },
+//   };
+// }
+
+export async function getStaticPaths() {
+  try {
+    const res = await fetch("http://localhost:3000/api/handle-meetupv2", {
+      method: "GET",
+    });
+
+    const data = await res.json();
+    let arr = [];
+    for (const x in data.movies) {
+      // arr.push({ params: { meetupID: x } });
+      arr.push({ params: { movieID: data.movies[x].imdbID.toString() } });
+    }
+
+    return {
+      fallback: false,
+      paths: arr,
+    };
+  } catch (e) {
+    console.log(e);
+    return {
+      fallback: true,
+      paths: [],
+    };
+  }
+}
+export async function getStaticProps(context) {
+  try {
+    const res = await fetch(
+      `http://localhost:3000/api/${context.params.movieID}`,
+      {
+        method: "GET",
+      }
+    );
+    const data = await res.json();
+
+    return {
+      props: {
+        movie: data,
+      },
+    };
+  } catch (e) {
+    console.log(e);
+    return {
+      props: {
+        movie: [],
+      },
+    };
+  }
+}
+
+export default Meetup;
