@@ -65,7 +65,7 @@ export async function getStaticPaths(req, res) {
 
 export async function getStaticProps(context) {
   try {
-    const res = await fetch(`${urlForApi}/api/${context.params.movieID}`, {
+    const res = await fetch(`/api/${context.params.movieID}`, {
       method: "GET",
     });
     const data = await res.json();
