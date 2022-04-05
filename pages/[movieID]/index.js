@@ -3,6 +3,7 @@ import { Button, Card, Image, Text, TextInput } from "@mantine/core";
 import { useState } from "react";
 import { MongoClient } from "mongodb";
 import urlForApi from "../../url";
+import { data } from "autoprefixer";
 
 const Movie = (props) => {
   const { Title, Plot, Images } = props.movie;
@@ -30,7 +31,7 @@ const Movie = (props) => {
           <Card.Section>
             <Image
               src={
-                Images[0]
+                Images
                   ? Images[0]
                   : "https://images.unsplash.com/photo-1540122995631-7c74c671ff8d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80"
               }
@@ -39,12 +40,10 @@ const Movie = (props) => {
           </Card.Section>
 
           <Text weight={500} className="text-orange-800 text-6xl mb-5" mt={20}>
-            {Title ? Title : "Title placeholder"}
+            {Title}
           </Text>
 
-          <Text style={{ fontSize: "34px" }}>
-            {Plot ? Plot : "Plot placeholder"}
-          </Text>
+          <Text style={{ fontSize: "34px" }}>{Plot}</Text>
         </Card>
       </div>
     </div>
@@ -72,26 +71,57 @@ export async function getStaticPaths(req, res) {
   };
 }
 
-export async function getStaticProps(context) {
+export async function getStaticProps({ params }) {
   try {
-    const res = await fetch(`${urlForApi}/api/${context.params.movieID}`, {
-      method: "GET",
+    const client = await MongoClient.connect(
+      "mongodb+srv://niyoh55:niyoh55@cluster0.3elva.mongodb.net/movies?retryWrites=true&w=majority"
+    );
+
+    const db = client.db();
+
+    const moviesCollection = db.collection("movies");
+
+    const movie = await moviesCollection.findOne({
+      imdbID: params.movieID,
     });
-    const data = await res.json();
 
     return {
       props: {
-        movie: data.movie,
+        movie: { Images: movie.Images, Title: movie.Title, Plot: movie.Plot },
       },
     };
   } catch (e) {
     console.log(e);
     return {
       props: {
-        movie: [],
+        movie: {
+          Images: null,
+          Title: "Title placeholder",
+          Plot: "Plot placeholder",
+        },
       },
     };
   }
+
+  // try {
+  //   const res = await fetch(`${urlForApi}/api/${context.params.movieID}`, {
+  //     method: "GET",
+  //   });
+  //   const data = await res.json();
+
+  //   return {
+  //     props: {
+  //       movie: data.movie,
+  //     },
+  //   };
+  // } catch (e) {
+  //   console.log(e);
+  //   return {
+  //     props: {
+  //       movie: [],
+  //     },
+  //   };
+  // }
 }
 
 export default Movie;
