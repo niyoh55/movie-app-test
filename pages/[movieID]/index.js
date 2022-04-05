@@ -28,14 +28,23 @@ const Movie = (props) => {
           style={{ width: "900px" }}
         >
           <Card.Section>
-            <Image src={Images[0]} alt="No way!" />
+            <Image
+              src={
+                Images[0]
+                  ? Images[0]
+                  : "https://images.unsplash.com/photo-1540122995631-7c74c671ff8d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80"
+              }
+              alt="No way!"
+            />
           </Card.Section>
 
           <Text weight={500} className="text-orange-800 text-6xl mb-5" mt={20}>
-            {Title}
+            {Title ? Title : "Title placeholder"}
           </Text>
 
-          <Text style={{ fontSize: "34px" }}>{Plot}</Text>
+          <Text style={{ fontSize: "34px" }}>
+            {Plot ? Plot : "Plot placeholder"}
+          </Text>
         </Card>
       </div>
     </div>
