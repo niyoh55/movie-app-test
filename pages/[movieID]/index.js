@@ -12,7 +12,7 @@ const Movie = (props) => {
   const router = useRouter();
 
   return (
-    <div className="px-10 py-5 mx-8 mt-20 rounded-xl overflow-auto max-w-screen grid grid-cols-1 lg:grid-cols-2 font-serif text-black shadow-2xl bg-gray-100">
+    <div className="px-10 py-5 mx-8 mt-20 rounded-xl overflow-auto max-w-screen grid grid-cols-1 lg:grid-cols-2 font-serif ">
       <div className="h-full">
         <Carousel className="">
           {Images.map((x, index) => (
@@ -22,7 +22,7 @@ const Movie = (props) => {
           ))}
         </Carousel>
       </div>
-      <div className="w-full flex flex-col">
+      <div className="w-full flex flex-col text-black shadow-2xl mx-10 bg-gray-100 rounded-lg">
         <div className="w-full flex-none text-left px-10 py-10 ">
           <h1 className="text-8xl">{Title}</h1>
         </div>
