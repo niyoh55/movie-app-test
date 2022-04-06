@@ -13,7 +13,10 @@ const HomePage = (props) => {
 
   const displayMeetups = () => {
     return movies.map((x) => (
-      <div className=" hover:scale-[110%] active:scale-[150%] hover:z-20 duration-200 flex-row justify-center items-center hover:shadow-2xl">
+      <div
+        key={x.imdbID}
+        className=" hover:scale-[110%] active:scale-[150%] hover:z-20 duration-200 flex-row justify-center items-center hover:shadow-2xl"
+      >
         <CardComponent
           movies={{
             imdbID: x.imdbID,

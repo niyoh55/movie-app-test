@@ -15,8 +15,8 @@ const Movie = (props) => {
     <div className="px-10 py-5 mx-8 mt-20 rounded-xl overflow-auto max-w-screen grid grid-cols-1 lg:grid-cols-2 font-serif text-black shadow-2xl bg-gray-100">
       <div className="h-full">
         <Carousel className="">
-          {Images.map((x) => (
-            <div>
+          {Images.map((x, index) => (
+            <div key={index}>
               <img src={x} />
             </div>
           ))}
