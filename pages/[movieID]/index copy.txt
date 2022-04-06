@@ -12,35 +12,41 @@ const Movie = (props) => {
   const router = useRouter();
 
   return (
-    <div className="px-10 py-5 mx-8 mt-20 rounded-xl overflow-auto max-w-screen grid grid-cols-1 lg:grid-cols-2 font-serif text-black shadow-2xl bg-gray-100">
-      <div className="h-full">
-        <Carousel className="">
-          {Images.map((x) => (
-            <div>
-              <img src={x} />
-            </div>
-          ))}
-        </Carousel>
-      </div>
-      <div className="w-full flex flex-col">
-        <div className="w-full flex-none text-left px-10 py-10 ">
-          <h1 className="text-8xl">{Title}</h1>
-        </div>
+    <div className="py-0">
+      {/* <div className="bg-pink-400 py-5">
+          <h1 className=" text-5xl ">Movie Details</h1>
+        </div> */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Card
+          shadow="sm"
+          p="lg"
+          component="a"
+          target="_blank"
+          style={{ width: "900px" }}
+        >
+          <Card.Section>
+            <Carousel>
+              {Images.map((x) => (
+                <div>
+                  <img src={x} />
+                </div>
+              ))}
+            </Carousel>
+          </Card.Section>
 
-        <div className=" w-full flex-1 ">
-          <p className="text-left py-10 px-16 text-4xl">
-            <span className="font-bold">Plot:</span> <br></br>
-            {Plot}
-          </p>
-          <p className="text-left py-10 px-16 text-4xl">
-            <span className="font-bold">Cast:</span> <br></br>
-            Wala pa lods
-          </p>
-        </div>
+          <Text weight={500} className="text-orange-800 text-6xl mb-5" mt={20}>
+            {Title}
+          </Text>
+
+          <Text style={{ fontSize: "34px" }}>{Plot}</Text>
+        </Card>
       </div>
-      {/* <div className=" w-full col-span-2 bg-red-400	">
-        <p>dapat solo lang to</p>
-      </div> */}
     </div>
   );
 };
